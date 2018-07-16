@@ -7,7 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from new import Ui_Form
+from new import Ui_new_2
+from open import Ui_open
+from evaluate import Ui_evaluate
+
 class Ui_MainWindow(object):
  #open a new window  
     def opennew(self,action):
@@ -15,9 +18,19 @@ class Ui_MainWindow(object):
         #open the new window
         if txt=='New Team':
             self.newwindow=QtWidgets.QWidget()
-            self.ui=Ui_Form()
+            self.ui=Ui_new_2()
             self.ui.setupUi(self.newwindow)
             self.newwindow.show()
+        elif txt=='Open Team':
+            self.openwindow=QtWidgets.QWidget()
+            self.ui=Ui_open()
+            self.ui.setupUi(self.openwindow)
+            self.openwindow.show()
+        elif txt=='Evaluate Team':
+            self.evaluatewindow=QtWidgets.QMainWindow()
+            self.ui=Ui_evaluate()
+            self.ui.setupUi(self.evaluatewindow)
+            self.evaluatewindow.show()
    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")

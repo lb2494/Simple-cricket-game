@@ -8,17 +8,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 300)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+class Ui_new_2(object):
+    def setupUi(self, new_2):
+        new_2.setObjectName("new_2")
+        new_2.resize(400, 300)
+        self.verticalLayout = QtWidgets.QVBoxLayout(new_2)
         self.verticalLayout.setObjectName("verticalLayout")
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtWidgets.QLabel(Form)
+        self.label = QtWidgets.QLabel(new_2)
         font = QtGui.QFont()
         font.setPointSize(15)
         self.label.setFont(font)
@@ -32,7 +32,7 @@ class Ui_Form(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem2)
-        self.t1 = QtWidgets.QLineEdit(Form)
+        self.t1 = QtWidgets.QLineEdit(new_2)
         self.t1.setObjectName("t1")
         self.horizontalLayout_2.addWidget(self.t1)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -44,7 +44,7 @@ class Ui_Form(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem5)
-        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton = QtWidgets.QPushButton(new_2)
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout_3.addWidget(self.pushButton)
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -53,22 +53,22 @@ class Ui_Form(object):
         spacerItem7 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem7)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(new_2)
+        QtCore.QMetaObject.connectSlotsByName(new_2)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, new_2):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Enter the name of your team"))
-        self.pushButton.setText(_translate("Form", "OK"))
+        new_2.setWindowTitle(_translate("new_2", "Form"))
+        self.label.setText(_translate("new_2", "Enter the name of your team"))
+        self.pushButton.setText(_translate("new_2", "OK"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    new_2 = QtWidgets.QWidget()
+    ui = Ui_new_2()
+    ui.setupUi(new_2)
+    new_2.show()
     sys.exit(app.exec_())
 

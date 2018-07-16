@@ -8,11 +8,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_EvaluateWindow(object):
-    def setupUi(self, EvaluateWindow):
-        EvaluateWindow.setObjectName("EvaluateWindow")
-        EvaluateWindow.resize(699, 509)
-        self.centralwidget = QtWidgets.QWidget(EvaluateWindow)
+class Ui_evaluate(object):
+    def setupUi(self, evaluate):
+        evaluate.setObjectName("evaluate")
+        evaluate.resize(699, 509)
+        self.centralwidget = QtWidgets.QWidget(evaluate)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(90, 180, 521, 251))
@@ -66,28 +66,28 @@ class Ui_EvaluateWindow(object):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        EvaluateWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(EvaluateWindow)
+        evaluate.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(evaluate)
         self.statusbar.setObjectName("statusbar")
-        EvaluateWindow.setStatusBar(self.statusbar)
+        evaluate.setStatusBar(self.statusbar)
 
-        self.retranslateUi(EvaluateWindow)
-        QtCore.QMetaObject.connectSlotsByName(EvaluateWindow)
+        self.retranslateUi(evaluate)
+        QtCore.QMetaObject.connectSlotsByName(evaluate)
 
-    def retranslateUi(self, EvaluateWindow):
+    def retranslateUi(self, evaluate):
         _translate = QtCore.QCoreApplication.translate
-        EvaluateWindow.setWindowTitle(_translate("EvaluateWindow", "MainWindow"))
-        self.Players.setText(_translate("EvaluateWindow", "Players"))
-        self.Points.setText(_translate("EvaluateWindow", "Points"))
-        self.Calculate.setText(_translate("EvaluateWindow", "Calculate"))
+        evaluate.setWindowTitle(_translate("evaluate", "MainWindow"))
+        self.Players.setText(_translate("evaluate", "Players"))
+        self.Points.setText(_translate("evaluate", "Points"))
+        self.Calculate.setText(_translate("evaluate", "Calculate"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    EvaluateWindow = QtWidgets.QMainWindow()
-    ui = Ui_EvaluateWindow()
-    ui.setupUi(EvaluateWindow)
-    EvaluateWindow.show()
+    evaluate = QtWidgets.QMainWindow()
+    ui = Ui_evaluate()
+    ui.setupUi(evaluate)
+    evaluate.show()
     sys.exit(app.exec_())
 
