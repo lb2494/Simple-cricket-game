@@ -70,6 +70,13 @@ class Ui_evaluate(object):
         self.statusbar = QtWidgets.QStatusBar(evaluate)
         self.statusbar.setObjectName("statusbar")
         evaluate.setStatusBar(self.statusbar)
+        self.Selectmatch.addItem("--SELECT MATCH--")
+        self.Selectmatch.addItem("MATCH 1")
+        self.Selectmatch.addItem("MATCH 2")
+        self.Selectmatch.addItem("MATCH 3")
+        self.Selectmatch.addItem("MATCH 4")
+        self.SelectTeam.setDuplicatesEnabled(False)
+        self.SelectTeam.addItem("--SELECT TEAM--")
 
         self.retranslateUi(evaluate)
         QtCore.QMetaObject.connectSlotsByName(evaluate)

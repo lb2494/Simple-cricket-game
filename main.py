@@ -43,6 +43,7 @@ class Ui_MainWindow(object):
             self.evaluatewindow.show()
             
     def newteam(self):
+        "this function sets the values of line edits after new team"
         a=self.uinew.t1.text()
         self.t7.setText(a)
         self.t1.setText("0")
@@ -53,11 +54,41 @@ class Ui_MainWindow(object):
         self.t5.setText("1000")
         self.newwindow.close()   
              
+    def savewindow(self):
+        "to save a team in the database"
+        items=[]
+        for index in range(self.list2.count()):
+            items.append(self.list2.item(index).text())
+        nm=self.uinew.t1.text()
+        for i in range(len(items)):
+            cur.execute("select score from stats where Player = '"+items[i]+"';")
+            sr=cur.fetchone()
+            cur.execute("insert into teams values (?,?,?);",(nm,items[i],sr[0]))
+        Mymatch.commit()
+        
+    def evaluatewin(self):
+        cur.execute("select Name from teams;")
+        Team=cur.fetchall()
+        teamlist=[]
+        for i in range(len(Team)):
+            teamlist.append(Team[i][0])
+            
+        for name in set(teamlist):
+            self.uieval.SelectTeam.addItem(name)
+            
+    def evallist1(self):
+        nm=(self.uieval.SelectTeam.currentText())
+        cur.execute("select Players from teams where Name='"+nm+"';")
+        record=cur.fetchall()
+        result=cur.fetchall()
+        for i in range(len(result)):
+            item=result[i][0]
+            self.uieval.listView.addItem(item)  
+             
     def loadname(self):
+        "load the names of the players in list1"
         if self.t1.text()=="##":
-            error_dialogue=QtWidgets.QErrorMessage()
-            error_dialogue.showMessage('First create a new team')
-            error_dialogue.exec_()
+            self.message("Create a new team first")
         else:
             bat="BAT"
             bowl="BWl"
@@ -65,38 +96,113 @@ class Ui_MainWindow(object):
             ar="AR"
             sql1="select Player from stats where ctg = '"+bat+"';"
             sql2="select Player from stats where ctg = '"+bowl+"';"
-            sql3="select Player from stats where ctg = '"+wkt+"';"
-            sql4="select Player from stats where ctg = '"+ar+"';"
+            sql3="select Player from stats where ctg = '"+ar+"';"
+            sql4="select Player from stats where ctg = '"+wkt+"';"
             self.list1.clear()
             if self.rb2.isChecked()==True:
                 cur.execute(sql2)
-                BOW=cur.fetchall()
-                for i in range(len(BOW)):
-                    item=BOW[i][0]
+                result=cur.fetchall()
+                for i in range(len(result)):
+                    item=result[i][0]
                     self.list1.addItem(item)
             
             if self.rb1.isChecked()==True:
                 cur.execute(sql1)
-                BAT=cur.fetchall()
-                for i in range(len(BAT)):
-                    item=BAT[i][0]
+                result=cur.fetchall()
+                for i in range(len(result)):
+                    item=result[i][0]
                     self.list1.addItem(item)
             
             if self.rb3.isChecked()==True:
                 cur.execute(sql3)
-                BAT=cur.fetchall()
-                for i in range(len(BAT)):
-                    item=BAT[i][0]
+                result=cur.fetchall()
+                for i in range(len(result)):
+                    item=result[i][0]
                     self.list1.addItem(item)
                     
             if self.rb4.isChecked()==True:
                 cur.execute(sql4)
-                BAT=cur.fetchall()
-                for i in range(len(BAT)):
-                    item=BAT[i][0]
+                result=cur.fetchall()
+                for i in range(len(result)):
+                    item=result[i][0]
                     self.list1.addItem(item)
         
+    def removelist1(self,item):
+        "remove the selected players from list1"
+        self.list1.takeItem(self.list1.row(item))
+        self.list2.addItem(item.text())
+        global s 
+        s=item.text()
+        #to update the number of batsman
+        if self.rb1.isChecked()==True:
+            self.batcount+=1
+            self.t1.setText(str(self.batcount))
+            self.totalpl+=1
+        elif self.rb2.isChecked()==True:
+            self.bowlcount+=1
+            self.t2.setText(str(self.bowlcount))
+            self.totalpl+=1
+        elif self.rb3.isChecked()==True:
+            self.arcount+=1
+            self.t3.setText(str(self.arcount))
+            self.totalpl+=1
+        elif self.rb4.isChecked()==True:
+            self.wktcount+=1
+            self.t4.setText(str(self.wktcount))
+            self.totalpl+=1
+        self.error()    
+
+    def removelist2(self,item):
+        "remove the selected players from list1"
+        self.list2.takeItem(self.list2.row(item))
+        self.list1.addItem(item.text())
+        #update the number of players 
+        cur.execute("select ctg from stats where Player = '"+item.text()+"';")
+        self.cat=cur.fetchone()
+        if self.cat[0]=="BAT":
+            self.batcount-=1
+            self.t1.setText(str(self.batcount))
+            self.totalpl-=1
+        elif self.cat[0]=="BWl":
+            self.bowlcount-=1
+            self.t2.setText(str(self.bowlcount))
+            self.totalpl-=1
+        elif self.cat[0]=="AR":
+            self.arcount-=1
+            self.t3.setText(str(self.arcount))
+            self.totalpl-=1
+        elif self.cat[0]=="WKT":
+            self.wktcount-=1
+            self.t4.setText(str(self.wktcount))
+            self.totalpl-=1
+        self.error()
+    
+    def message(self,x):
+        "template for all message box"
+        error_dialogue=QtWidgets.QErrorMessage()
+        error_dialogue.showMessage(x)
+        error_dialogue.exec_()
+    
+    def error(self):
+        "function to handle all the exception"
+        if self.totalpl>=12:
+            self.message("You cannot select more than 11 players")
+            a=self.list2.takeItem(11)
+            self.list1.addItem(a.text())
+            '''if self.wktcount==2:
+            self.message("You can select only one wicket keeper")
+        #self.removelist2()
+        #self.list1.addItem(a.text())
+            self.list2.itemChanged.connect(self.removelist2)''' 
+            
+    
     def setupUi(self, MainWindow):
+        #initializing variables
+        self.batcount=0
+        self.bowlcount=0
+        self.arcount=0
+        self.wktcount=0
+        self.totalpl=0
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -232,11 +338,21 @@ class Ui_MainWindow(object):
         self.menuManage_Teams.triggered.connect(self.opennew)
         #new window
         self.uinew.pushButton.clicked.connect(self.newteam)
-                
+        
+        #calling loadname                
         self.rb1.clicked.connect(self.loadname)   
         self.rb2.clicked.connect(self.loadname)
         self.rb3.clicked.connect(self.loadname)
-        self.rb4.clicked.connect(self.loadname)     
+        self.rb4.clicked.connect(self.loadname)
+        
+        #calling remove list     
+        self.list1.itemDoubleClicked.connect(self.removelist1)  
+        self.list2.itemDoubleClicked.connect(self.removelist2)
+        
+        self.actionSave_Team.triggered.connect(self.savewindow)
+        #self.list2.itemEntered.connect(self.error)
+        self.actionEvaluate_Team.triggered.connect(self.evaluatewin)
+        self.uieval.SelectTeam.currentTextChanged.connect(self.evallist1)
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
