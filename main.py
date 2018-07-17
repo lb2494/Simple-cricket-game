@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from new import Ui_new_2
 from open import Ui_open
+from score import Ui_score
 from evaluate import Ui_evaluate
 import sys
 import sqlite3
@@ -28,7 +29,10 @@ class Ui_MainWindow(object):
         self.uieval=Ui_evaluate()
         self.uieval.setupUi(self.evaluatewindow)
  
-        
+        self.scorewindow=QtWidgets.QMainWindow()
+        self.uiscore=Ui_score()
+        self.uiscore.setupUi(self.scorewindow)
+               
  #open a new window  
     def opennew(self,action):
         txt= action.text()
@@ -52,6 +56,7 @@ class Ui_MainWindow(object):
         self.t4.setText("0")
         self.t6.setText("0")
         self.t5.setText("1000")
+        self.list2.clear()
         self.newwindow.close()   
              
     def savewindow(self):
@@ -79,11 +84,29 @@ class Ui_MainWindow(object):
     def evallist1(self):
         nm=(self.uieval.SelectTeam.currentText())
         cur.execute("select Players from teams where Name='"+nm+"';")
-        record=cur.fetchall()
         result=cur.fetchall()
-        for i in range(len(result)):
+        self.uieval.list1.clear()
+        for i in range(0,len(result)):
             item=result[i][0]
-            self.uieval.listView.addItem(item)  
+            self.uieval.list1.addItem(item)  
+        cur.execute("select Value from teams where Name = '"+nm+"';")
+        score=cur.fetchall()
+        self.uieval.list2.clear()
+        for i in range(0,len(score)):
+            item=score[i][0]
+            self.uieval.list2.addItem(str(item))  
+       
+            
+    def finalscore(self):
+        nm=(self.uieval.SelectTeam.currentText())
+        cur.execute("select Value from teams where Name = '"+nm+"';")
+        score=cur.fetchall()
+        teamscore=[]
+        for i in range(len(score)):
+            teamscore.append(score[i][0])
+        self.scorewindow.show()
+        a=(sum(teamscore))
+        self.uiscore.Score.setText(str(a))
              
     def loadname(self):
         "load the names of the players in list1"
@@ -353,6 +376,8 @@ class Ui_MainWindow(object):
         #self.list2.itemEntered.connect(self.error)
         self.actionEvaluate_Team.triggered.connect(self.evaluatewin)
         self.uieval.SelectTeam.currentTextChanged.connect(self.evallist1)
+        
+        self.uieval.Calculate.clicked.connect(self.finalscore)
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
