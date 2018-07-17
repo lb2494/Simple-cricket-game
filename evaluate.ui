@@ -25,10 +25,10 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QListWidget" name="list1"/>
      </item>
      <item>
-      <widget class="QListView" name="listView_2"/>
+      <widget class="QListWidget" name="list2"/>
      </item>
     </layout>
    </widget>
@@ -107,7 +107,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QComboBox" name="Selectmatch">
+   <widget class="QComboBox" name="SelectMatch">
     <property name="geometry">
      <rect>
       <x>400</x>
