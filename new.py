@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
 
 class Ui_new_2(object):
     def setupUi(self, new_2):
@@ -56,12 +57,12 @@ class Ui_new_2(object):
         self.retranslateUi(new_2)
         QtCore.QMetaObject.connectSlotsByName(new_2)
 
+
     def retranslateUi(self, new_2):
         _translate = QtCore.QCoreApplication.translate
         new_2.setWindowTitle(_translate("new_2", "Form"))
         self.label.setText(_translate("new_2", "Enter the name of your team"))
         self.pushButton.setText(_translate("new_2", "OK"))
-
 
 if __name__ == "__main__":
     import sys

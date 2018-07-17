@@ -10,28 +10,92 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from new import Ui_new_2
 from open import Ui_open
 from evaluate import Ui_evaluate
-
+import sys
+import sqlite3
+Mymatch=sqlite3.connect('cricket.db')
+cur=Mymatch.cursor()
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.newwindow=QtWidgets.QWidget()
+        self.uinew=Ui_new_2()
+        self.uinew.setupUi(self.newwindow)
+        
+        self.openwindow=QtWidgets.QWidget()
+        self.uiopen=Ui_open()
+        self.uiopen.setupUi(self.openwindow)
+        
+        self.evaluatewindow=QtWidgets.QMainWindow()
+        self.uieval=Ui_evaluate()
+        self.uieval.setupUi(self.evaluatewindow)
+ 
+        
  #open a new window  
     def opennew(self,action):
         txt= action.text()
         #open the new window
         if txt=='New Team':
-            self.newwindow=QtWidgets.QWidget()
-            self.ui=Ui_new_2()
-            self.ui.setupUi(self.newwindow)
             self.newwindow.show()
+        #open the OPEN window
         elif txt=='Open Team':
-            self.openwindow=QtWidgets.QWidget()
-            self.ui=Ui_open()
-            self.ui.setupUi(self.openwindow)
             self.openwindow.show()
+        #open the evaluate window
         elif txt=='Evaluate Team':
-            self.evaluatewindow=QtWidgets.QMainWindow()
-            self.ui=Ui_evaluate()
-            self.ui.setupUi(self.evaluatewindow)
             self.evaluatewindow.show()
-   
+            
+    def newteam(self):
+        a=self.uinew.t1.text()
+        self.t7.setText(a)
+        self.t1.setText("0")
+        self.t2.setText("0")
+        self.t3.setText("0")
+        self.t4.setText("0")
+        self.t6.setText("0")
+        self.t5.setText("1000")
+        self.newwindow.close()   
+             
+    def loadname(self):
+        if self.t1.text()=="##":
+            error_dialogue=QtWidgets.QErrorMessage()
+            error_dialogue.showMessage('First create a new team')
+            error_dialogue.exec_()
+        else:
+            bat="BAT"
+            bowl="BWl"
+            wkt="WK"
+            ar="AR"
+            sql1="select Player from stats where ctg = '"+bat+"';"
+            sql2="select Player from stats where ctg = '"+bowl+"';"
+            sql3="select Player from stats where ctg = '"+wkt+"';"
+            sql4="select Player from stats where ctg = '"+ar+"';"
+            self.list1.clear()
+            if self.rb2.isChecked()==True:
+                cur.execute(sql2)
+                BOW=cur.fetchall()
+                for i in range(len(BOW)):
+                    item=BOW[i][0]
+                    self.list1.addItem(item)
+            
+            if self.rb1.isChecked()==True:
+                cur.execute(sql1)
+                BAT=cur.fetchall()
+                for i in range(len(BAT)):
+                    item=BAT[i][0]
+                    self.list1.addItem(item)
+            
+            if self.rb3.isChecked()==True:
+                cur.execute(sql3)
+                BAT=cur.fetchall()
+                for i in range(len(BAT)):
+                    item=BAT[i][0]
+                    self.list1.addItem(item)
+                    
+            if self.rb4.isChecked()==True:
+                cur.execute(sql4)
+                BAT=cur.fetchall()
+                for i in range(len(BAT)):
+                    item=BAT[i][0]
+                    self.list1.addItem(item)
+        
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -164,11 +228,19 @@ class Ui_MainWindow(object):
         self.menuManage_Teams.addAction(self.actionSave_Team)
         self.menuManage_Teams.addAction(self.actionEvaluate_Team)
         self.menubar.addAction(self.menuManage_Teams.menuAction())
+        #open window
         self.menuManage_Teams.triggered.connect(self.opennew)
-
+        #new window
+        self.uinew.pushButton.clicked.connect(self.newteam)
+                
+        self.rb1.clicked.connect(self.loadname)   
+        self.rb2.clicked.connect(self.loadname)
+        self.rb3.clicked.connect(self.loadname)
+        self.rb4.clicked.connect(self.loadname)     
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+    
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
