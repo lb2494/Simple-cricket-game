@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         
     def evaluatewin(self):
         "when evalute window open"
-        self.savewindow()
+        #self.savewindow()
         cur.execute("select Name from teams;")
         Team=cur.fetchall()
         teamlist=[]
