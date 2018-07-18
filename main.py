@@ -15,6 +15,8 @@ import sys
 import sqlite3
 Mymatch=sqlite3.connect('cricket.db')
 cur=Mymatch.cursor()
+global pointsused
+global pointleft
 class Ui_MainWindow(object):
     def __init__(self):
         self.newwindow=QtWidgets.QWidget()
@@ -72,6 +74,8 @@ class Ui_MainWindow(object):
         Mymatch.commit()
         
     def evaluatewin(self):
+        "when evalute window open"
+        self.savewindow()
         cur.execute("select Name from teams;")
         Team=cur.fetchall()
         teamlist=[]
@@ -82,6 +86,7 @@ class Ui_MainWindow(object):
             self.uieval.SelectTeam.addItem(name)
             
     def evallist1(self):
+        "evaluate the items of list1"
         nm=(self.uieval.SelectTeam.currentText())
         cur.execute("select Players from teams where Name='"+nm+"';")
         result=cur.fetchall()
@@ -98,6 +103,7 @@ class Ui_MainWindow(object):
        
             
     def finalscore(self):
+        "calculate the final score"
         nm=(self.uieval.SelectTeam.currentText())
         cur.execute("select Value from teams where Name = '"+nm+"';")
         score=cur.fetchall()
@@ -154,8 +160,7 @@ class Ui_MainWindow(object):
         "remove the selected players from list1"
         self.list1.takeItem(self.list1.row(item))
         self.list2.addItem(item.text())
-        global s 
-        s=item.text()
+
         #to update the number of batsman
         if self.rb1.isChecked()==True:
             self.batcount+=1
@@ -174,6 +179,21 @@ class Ui_MainWindow(object):
             self.t4.setText(str(self.wktcount))
             self.totalpl+=1
         self.error()    
+        cur.execute("select Value from stats where Player = '"+str(item.text())+"';")
+        points=cur.fetchone()
+        global pointsused
+        global pointleft
+        pointsused=int(pointsused)+int(points[0])
+        if pointsused>=1000:
+            global pointused
+            self.message("You cannot use more than 1000 points")
+            pointsused=int(pointsused)-int(points[0])
+            
+        self.t6.setText(str(pointsused))
+        pointleft=1000-int(pointsused)
+        self.t5.setText(str(pointleft))
+        
+        
 
     def removelist2(self,item):
         "remove the selected players from list1"
@@ -199,6 +219,14 @@ class Ui_MainWindow(object):
             self.t4.setText(str(self.wktcount))
             self.totalpl-=1
         self.error()
+        cur.execute("select Value from stats where Player = '"+str(item.text())+"';")
+        points=cur.fetchone()
+        global pointsused
+        global pointleft
+        pointsused=int(pointsused)-int(points[0])
+        self.t6.setText(str(pointsused))
+        pointleft=1000-int(pointsused)
+        self.t5.setText(str(pointleft))
     
     def message(self,x):
         "template for all message box"
@@ -212,11 +240,9 @@ class Ui_MainWindow(object):
             self.message("You cannot select more than 11 players")
             a=self.list2.takeItem(11)
             self.list1.addItem(a.text())
-            '''if self.wktcount==2:
+        if self.wktcount==2:
             self.message("You can select only one wicket keeper")
-        #self.removelist2()
-        #self.list1.addItem(a.text())
-            self.list2.itemChanged.connect(self.removelist2)''' 
+             
             
     
     def setupUi(self, MainWindow):
@@ -226,6 +252,11 @@ class Ui_MainWindow(object):
         self.arcount=0
         self.wktcount=0
         self.totalpl=0
+        global pointsused
+        pointsused=0
+        global pointleft
+        pointleft=1000
+        
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -375,8 +406,10 @@ class Ui_MainWindow(object):
         self.actionSave_Team.triggered.connect(self.savewindow)
         #self.list2.itemEntered.connect(self.error)
         self.actionEvaluate_Team.triggered.connect(self.evaluatewin)
-        self.uieval.SelectTeam.currentTextChanged.connect(self.evallist1)
+        #to fill the list widget of players
+        self.uieval.SelectMatch.currentTextChanged.connect(self.evallist1)
         
+        #calculate the finalscore
         self.uieval.Calculate.clicked.connect(self.finalscore)
         
         self.retranslateUi(MainWindow)
