@@ -130,55 +130,86 @@ class Ui_MainWindow(object):
             self.list1.clear()
             if self.rb2.isChecked()==True:
                 cur.execute(sql2)
-                result=cur.fetchall()
-                for i in range(len(result)):
-                    item=result[i][0]
-                    self.list1.addItem(item)
+                for row in cur:
+                    selected=[]
+                    for i in range(self.list2.count()):
+                        selected.append(self.list2.item(i).text())
+                    if row[0] not in selected:
+                        self.list1.addItem(row[0])
             
             if self.rb1.isChecked()==True:
                 cur.execute(sql1)
-                result=cur.fetchall()
-                for i in range(len(result)):
-                    item=result[i][0]
-                    self.list1.addItem(item)
+                for row in cur:
+                    selected=[]
+                    for i in range(self.list2.count()):
+                        selected.append(self.list2.item(i).text())
+                    if row[0] not in selected:
+                        self.list1.addItem(row[0])
             
             if self.rb3.isChecked()==True:
                 cur.execute(sql3)
-                result=cur.fetchall()
-                for i in range(len(result)):
-                    item=result[i][0]
-                    self.list1.addItem(item)
+                for row in cur:
+                    selected=[]
+                    for i in range(self.list2.count()):
+                        selected.append(self.list2.item(i).text())
+                    if row[0] not in selected:
+                        self.list1.addItem(row[0])
                     
             if self.rb4.isChecked()==True:
                 cur.execute(sql4)
-                result=cur.fetchall()
-                for i in range(len(result)):
-                    item=result[i][0]
-                    self.list1.addItem(item)
+                for row in cur:
+                    selected=[]
+                    for i in range(self.list2.count()):
+                        selected.append(self.list2.item(i).text())
+                    if row[0] not in selected:
+                        self.list1.addItem(row[0])
         
     def removelist1(self,item):
         "remove the selected players from list1"
-        self.list1.takeItem(self.list1.row(item))
-        self.list2.addItem(item.text())
+        #self.list1.takeItem(self.list1.row(item))
+        #self.list2.addItem(item.text())
 
         #to update the number of batsman
         if self.rb1.isChecked()==True:
             self.batcount+=1
-            self.t1.setText(str(self.batcount))
-            self.totalpl+=1
-        elif self.rb2.isChecked()==True:
+            tst=self.error()
+            if tst != False:
+                self.list1.takeItem(self.list1.row(item))
+                self.list2.addItem(item.text())
+                self.t1.setText(str(self.batcount))
+                self.totalpl+=1
+            else:
+                self.batcount-=1
+        if self.rb2.isChecked()==True:
             self.bowlcount+=1
-            self.t2.setText(str(self.bowlcount))
-            self.totalpl+=1
-        elif self.rb3.isChecked()==True:
+            tst=self.error()
+            if tst != False:
+                self.list1.takeItem(self.list1.row(item))
+                self.list2.addItem(item.text())
+                self.t2.setText(str(self.bowlcount))
+                self.totalpl+=1
+            else:
+                self.bowlcount-=1
+        if self.rb3.isChecked()==True:
             self.arcount+=1
-            self.t3.setText(str(self.arcount))
-            self.totalpl+=1
-        elif self.rb4.isChecked()==True:
+            tst=self.error()
+            if tst != False:
+                self.list1.takeItem(self.list1.row(item))
+                self.list2.addItem(item.text())
+                self.t3.setText(str(self.arcount))
+                self.totalpl+=1
+            else:
+                self.arcount-=1
+        if self.rb4.isChecked()==True:
             self.wktcount+=1
-            self.t4.setText(str(self.wktcount))
-            self.totalpl+=1
-        self.error()    
+            tst=self.error()
+            if tst != False:
+                self.list1.takeItem(self.list1.row(item))
+                self.list2.addItem(item.text())
+                self.t4.setText(str(self.wktcount))
+                self.totalpl+=1   
+            else:
+                self.wktcount-=1
         cur.execute("select Value from stats where Player = '"+str(item.text())+"';")
         points=cur.fetchone()
         global pointsused
@@ -200,8 +231,9 @@ class Ui_MainWindow(object):
         self.list2.takeItem(self.list2.row(item))
         self.list1.addItem(item.text())
         #update the number of players 
-        cur.execute("select ctg from stats where Player = '"+item.text()+"';")
+        cur.execute("select ctg from stats where Player = '"+str(item.text())+"';")
         self.cat=cur.fetchone()
+        
         if self.cat[0]=="BAT":
             self.batcount-=1
             self.t1.setText(str(self.batcount))
@@ -218,7 +250,6 @@ class Ui_MainWindow(object):
             self.wktcount-=1
             self.t4.setText(str(self.wktcount))
             self.totalpl-=1
-        self.error()
         cur.execute("select Value from stats where Player = '"+str(item.text())+"';")
         points=cur.fetchone()
         global pointsused
@@ -242,7 +273,17 @@ class Ui_MainWindow(object):
             self.list1.addItem(a.text())
         if self.wktcount==2:
             self.message("You can select only one wicket keeper")
-             
+            return False
+        if self.batcount>=5:
+            self.message("You can select only five batsmen")
+            return False
+        if self.bowlcount==5:
+            self.message("You can select only five bowler")
+            return False
+        if self.arcount==3:
+            self.message("You can select only three all rounder")
+            return False
+        
             
     
     def setupUi(self, MainWindow):
